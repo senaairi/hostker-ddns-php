@@ -1,0 +1,10 @@
+cache
+log
+data
+%SystemDrive%
+.settings
+.buildpath
+.project
+.idea
+.test
+config.php
