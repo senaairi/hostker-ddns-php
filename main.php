@@ -144,9 +144,9 @@ function GetMyip_openwrt() {
         $ipv4 = $matches[1];
     }
     // 获取lan口的ipv6
-    exec('ip addr show br-lan', $result, $status);
-    if(preg_match('/inet6\ ([0-9a-f\:]+){1}\//', $result[4], $matches)) {
-        $ipv6 = $matches[1];
+    exec('ip addr show br-lan', $result2, $status2);
+    if(preg_match('/inet6\ ([0-9a-f\:]+){1}\//', $result2[4], $matches2)) {
+        $ipv6 = $matches2[1];
     }
     return [$ipv4, $ipv6];
 }
