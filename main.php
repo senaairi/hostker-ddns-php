@@ -36,7 +36,7 @@ try {
     }
 
     # 未找打记录，自动创建
-    $myip = GetMyIP();
+    $myip = GetMyip_openwrt(); // 获取本机ip
     $v4_first_created = false;
     $v6_first_created = false;
     if(DDNS_IPV4 && !$v4_dns_id) {
@@ -99,7 +99,7 @@ try {
 
         sleep(IPCheckSleep);
         # 休眠结束，下一次检测前先读取一下本机ip
-        $ipcheck = GetMyIP();
+        $ipcheck = GetMyip_openwrt(); // 获取本机ip
         if(DDNS_IPV4 && !$ipcheck[0])
             echo "ipv4检测失败！！！\r\n";
         else
@@ -130,5 +130,24 @@ function GetMyIP(){
         $return[1] = str_replace("\n", '', $return[1]);
     }
     return $return;
+}
+
+/**
+ * 在openwrt下，获取本机ip
+ */
+function GetMyip_openwrt() {
+    $ipv6 = '';
+    $ipv4 = '';
+    // 获取pppoe-wan的ipv4地址
+    exec('ip addr show pppoe-wan', $result, $status);
+    if(preg_match('/inet\ ([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}){1}\ /', $result[2], $matches)) {
+        $ipv4 = $matches[1];
+    }
+    // 获取lan口的ipv6
+    exec('ip addr show br-lan', $result, $status);
+    if(preg_match('/inet6\ ([0-9a-f\:]+){1}\//', $result[4], $matches)) {
+        $ipv6 = $matches[1];
+    }
+    return [$ipv4, $ipv6];
 }
 ?>
